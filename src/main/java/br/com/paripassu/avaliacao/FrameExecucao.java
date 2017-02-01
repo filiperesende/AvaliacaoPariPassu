@@ -61,8 +61,8 @@ public class FrameExecucao extends JFrame {
 	}
 
 	private void criarFieldPathFirefox() {
-		JLabel label = new JLabel("Path firefox.exe");
-		label.setBounds(10, 10, 100, 15);
+		JLabel label = new JLabel("Path firefox.exe (Versão 47.0.2)");
+		label.setBounds(10, 10, 200, 15);
 		this.add(label);
 		
 		tfPathFirefox = new JTextField();

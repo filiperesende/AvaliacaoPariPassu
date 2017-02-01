@@ -1,54 +1,76 @@
 package br.com.paripassu.avaliacao;
 
-import java.io.File;
+import java.util.List;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class Executar {
 	
-	private final FirefoxDriver driver;
+	private final AppDriver driver;
 	
 	public Executar(String pathFirefox) {
-		File pathBinary = new File(pathFirefox);
-        if (pathBinary.exists()) {
-            FirefoxBinary binary = new FirefoxBinary(pathBinary);
-            driver = new FirefoxDriver(binary, null);
-        } else {
-            driver = new FirefoxDriver();
-        }
-	}
+		driver = new AppDriver(pathFirefox);
+}
 	
 	public void iniciar() {
-		abrirPagina();
 		efetuarLogin();
+		driver.abrirQuestionario();
+		preencherIdentificacao();
+		proximoPasso();
+		preencherQuestoes();
+		salvarEFinalizar();
 	}
 	
-	private void setText(String id, String texto) {
-		WebElement element = getElement(id);
-		element.sendKeys(texto);
+	private void salvarEFinalizar() {
+		WebElement salvar = driver.getElementByXPath("//*[@ng-click='saveAndFinish()']");
+//		salvar.click();
 	}
 
-	private WebElement getElement(String id) {
-		return driver.findElementById(id);
+	private void preencherQuestoes() {
+		String xPath = "//*[@ng-model='questao.value']";
+		driver.aguardarElementoXPath(xPath);
+		List<WebElement> elements = driver.getElementsByXPath(xPath);
+		elements.get(0).sendKeys("Foi indicação de um colaborador da empresa e antigo colega. Pelo que conversamos, a PariPassu é uma excelente empresa para trabalhar.");
+		elements.get(1).sendKeys("Estou dividido entre o desenvolvimento e qualidade de software, porém, a garantia de que o software não apresenta problemas o torna mais confiável.");
+		elements.get(2).sendKeys("Acredito que eles são o pontapé inicial para o aprimoramento, tanto no desenvolvimento de software quanto no dia a dia de uma pessoa.");
 	}
-	
-	private void abrirPagina() {
-		driver.get("http://clicq.paripassu.com.br");
+
+	private void proximoPasso() {
+		WebElement container = driver.getElement("pull-right");
+		WebElement next = container.findElement(By.xpath("//*[@ng-click='next()']"));
+		next.click();
 	}
-	
+
+	private void preencherIdentificacao() {
+		String xPath = "//*[@ng-model='questao.value']";
+		driver.aguardarElementoXPath(xPath);
+		List<WebElement> elements = driver.getElementsByXPath(xPath);
+		elements.get(0).sendKeys("Filipe Teixeira Resende");
+		elements.get(1).sendKeys("filipetr@gmail.com");
+	}
+
 	private void efetuarLogin() {
-		setText("usuario", "user");
-		setText("password", "texto");
-		click();
+		if (estaLogado()) {
+			return;
+		}
+		driver.abrirPagina("http://clicq.paripassu.com.br");
+		driver.aguardarElemento("usuario");
+		driver.setText("usuario", "filipetr@gmail.com");
+		driver.setText("password", "abcd1234");
+		driver.click("submit-login");
 	}
 	
-	private void click() {
-		WebElement element = getElement("button");
-		element.click();
+	private boolean estaLogado() {
+		try {
+			WebElement element = driver.getElementByXPath("//*[@ng-if='hasEmpresaCadastrada']");
+			return element != null;
+		} catch (NoSuchElementException e) {
+			return false;
+		}
 	}
-	
+
 	public void fecharDriver() {
 		driver.close();
 	}
