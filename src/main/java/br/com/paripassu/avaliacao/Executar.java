@@ -25,7 +25,7 @@ public class Executar {
 	
 	private void salvarEFinalizar() {
 		WebElement salvar = driver.getElementByXPath("//*[@ng-click='saveAndFinish()']");
-//		salvar.click();
+		salvar.click();
 	}
 
 	private void preencherQuestoes() {
