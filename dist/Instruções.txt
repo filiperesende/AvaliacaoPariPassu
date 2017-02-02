@@ -1,0 +1,14 @@
+﻿Implementação:
+  IDE: Eclipse Neon.2 Release (4.6.2)
+  Java: 1.8.0_111
+  Maven: 3.3.9
+  
+Requisitos para execuçao:
+  Java na versão 1.8.0_111
+  Firefox na versão 47.0.2
+
+Instruções para execução:
+1 - Na pasta dist contém o arquivo executável (Avaliacao.jar).
+2 - Iniciar o executável e na tela que abrir deve-se informar o diretório do firefox.
+3 - Acionar o botão "Iniciar".
+4 - A partir deste ponto a suíte desenvolvida deve acessar o sistema clicq, preencher os campos e finalizar.
